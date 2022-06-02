@@ -1,0 +1,98 @@
+---
+title: "ABM Data Processing and Statistics"
+author: "@MinaAlmasi & @drasbaek"
+date: "6/2/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+pacman::p_load(tidyverse, ggplot)
+```
+
+## Loading the data 
+```{r}
+data <- read_csv("all_group_result.csv")
+```
+
+
+```{r}
+colnames(data)
+```
+
+## Grouping the diversity_score into "low, middle, high" 
+```{r}
+data$diversity <- cut(data$diversity_score, 
+                      breaks = c(-Inf, 2, 5, Inf),
+                      labels = c("low", "middle", "high"))
+```
+
+```{r}
+data$diversity <- as.factor(data$diversity)
+```
+
+
+### Counting: 
+```{r}
+ggplot(data = data, aes(x = diversity, fill = diversity)) + 
+  geom_histogram(stat = "count") + 
+  theme_bw()
+```
+
+## Plotting
+### Synergy
+```{r}
+ggplot(data = data, aes(x = diversity, y = avg_strong_synergy, fill = diversity)) + 
+  labs(title = "Strong Synergy")+
+  geom_violin()
+```
+
+```{r}
+ggplot(data = data, aes(x = diversity, y = avg_weak_synergy, fill = diversity)) + 
+  labs(title = "Weak Synergy")+
+  geom_violin()
+```
+
+### Accuracy 
+```{r}
+ggplot(data = data, aes(x = avg_accuracy)) + 
+  geom_density() + 
+  facet_wrap(.~diversity)
+```
+
+```{r}
+ggplot(data = data, aes(x = diversity, y = avg_accuracy, fill = diversity)) + 
+  labs(title = "Accuracy")+
+  geom_violin()
+```
+```{r}
+ggplot(data = data, aes(x = avg_accuracy, y = avg_n_tick)) + 
+  labs(title = "Accuracy and Number of Ticks")+
+  geom_point(aes(color = diversity)) + 
+  theme_bw()
+```
+
+## STATS 
+```{r}
+## accuracy model ## 
+accuracy_model <- lm(avg_accuracy ~ diversity, data = data)
+summary(accuracy_model)
+```
+
+```{r}
+## ticks model ## 
+ticks_model <- lm(avg_n_tick ~ diversity, data = data)
+summary(ticks_model)
+```
+
+
+```{r}
+## consensus model ## 
+consensus_model <- lm(avg_consensus ~ diversity, data = data)
+summary(consensus_model)
+```
