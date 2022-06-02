@@ -96,8 +96,3 @@ summary(ticks_model)
 consensus_model <- lm(avg_consensus ~ diversity, data = data)
 summary(consensus_model)
 ```
-```{r}
-
-```
-
-
