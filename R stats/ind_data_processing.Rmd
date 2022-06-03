@@ -17,12 +17,49 @@ pacman::p_load(tidyverse)
 
 ## Loading the data 
 ```{r}
-data <- read_csv("data/100sim_NEW_all_ind_friday.csv")
+data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_1000_sim/1000sim_ind_data.csv")
 ```
-
+```{r}
+group_data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_1000_sim/1000sim_group_data.csv")
+```
 
 ```{r}
 colnames(data)
+```
+
+### Diversity Level 
+```{r}
+repeated_data <- group_data[rep(seq_len(nrow(group_data)), each = 4), ] 
+
+data$diversity_score <- repeated_data$diversity_score
+```
+
+```{r}
+data$diversity <- cut(data$diversity_score, 
+                      breaks = c(-Inf, 2, 5, Inf),
+                      labels = c("low", "middle", "high"))
+```
+
+```{r}
+data$diversity <- as.factor(data$diversity)
+data$type <- as.factor(data$type)
+```
+
+```{r}
+mean_values <- data %>%
+  group_by(type) %>% 
+  summarise("mean_avg_adaptation" = mean(avg_adaptation), 
+            "sd_mean_avg_adaptation" = sd(avg_adaptation))
+
+mean_values
+
+mean_values %>%
+  mutate(type = fct_reorder(type, mean_avg_adaptation)) %>%
+  ggplot(aes(x=type, y=mean_avg_adaptation, color = type)) +
+    geom_point(stat="identity") +
+    labs(x = "Adaptation", y = "Personality Type (PT)", title = "Personality Type and Adaptation")+
+    theme_bw() + 
+    guides(color=FALSE)
 ```
 
 ### Accuracy 
@@ -30,6 +67,11 @@ colnames(data)
 ggplot(data = data, aes(x = type, y = avg_accuracy, fill = type)) + 
   labs(title = "Accuracy")+
   geom_violin()
+```
+
+
+```{r}
+
 ```
 
 ```{r}

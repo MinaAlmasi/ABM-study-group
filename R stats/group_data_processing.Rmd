@@ -17,7 +17,7 @@ pacman::p_load(tidyverse)
 
 ## Loading the data 
 ```{r}
-data <- read_csv("100sim_NEW_all_group_friday.csv")
+data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_1000_sim/1000sim_group_data.csv")
 ```
 
 
