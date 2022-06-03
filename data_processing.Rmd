@@ -17,7 +17,7 @@ pacman::p_load(tidyverse, ggplot)
 
 ## Loading the data 
 ```{r}
-data <- read_csv("all_group_result.csv")
+data <- read_csv("10sim_OLD_all_group.csv")
 ```
 
 
@@ -95,4 +95,14 @@ summary(ticks_model)
 ## consensus model ## 
 consensus_model <- lm(avg_consensus ~ diversity, data = data)
 summary(consensus_model)
+```
+
+
+```{r}
+## synergy models ## 
+weak_synergy_model <- lm(avg_weak_synergy ~ diversity, data = data)
+summary(weak_synergy_model)
+
+strong_synergy_model <- lm(avg_strong_synergy ~ diversity, data = data)
+summary(strong_synergy_model)
 ```
