@@ -1,0 +1,62 @@
+---
+title: "ABM Individual Data Processing and Statistics"
+author: "@MinaAlmasi & @drasbaek"
+date: "6/2/2022"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+pacman::p_load(tidyverse)
+```
+
+## Loading the data 
+```{r}
+data <- read_csv("data/100sim_NEW_all_ind_friday.csv")
+```
+
+
+```{r}
+colnames(data)
+```
+
+### Accuracy 
+```{r}
+ggplot(data = data, aes(x = type, y = avg_accuracy, fill = type)) + 
+  labs(title = "Accuracy")+
+  geom_violin()
+```
+
+```{r}
+ggplot(data = data, aes(x = avg_accuracy, y = avg_adaptation)) + 
+  labs(title = "Accuracy and Adaptation")+
+  geom_point(aes(color = type)) + 
+  theme_bw()
+```
+
+
+```{r}
+ggplot(data = data, aes(x = type, y = avg_adaptation, fill = type)) + 
+  labs(title = "Adaptation")+
+  geom_violin()
+
+```
+
+## STATS 
+```{r}
+## accuracy model ## 
+accuracy_model <- lm(avg_accuracy ~ type, data = data)
+summary(accuracy_model)
+```
+
+```{r}
+## adaptation model ## 
+adaptation_model <- lm(avg_adaptation ~ type, data = data)
+summary(adaptation_model)
+```
+
