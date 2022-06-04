@@ -17,36 +17,39 @@ pacman::p_load(tidyverse)
 
 ## Loading the data 
 ```{r}
-data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_1000_sim/1000sim_ind_data.csv")
+#ind_data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_1000_sim/1000sim_ind_data.csv")
+
+ind_data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_100_sim/15ticks_100sim_ind_data.csv")
 ```
 ```{r}
-group_data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_1000_sim/1000sim_group_data.csv")
+group_data <- read_csv("/Users/minaalmasi/Desktop/ABM-study-group/data_100_sim/15ticks_100sim_group_data.csv")
 ```
 
+
 ```{r}
-colnames(data)
+colnames(ind_data)
 ```
 
 ### Diversity Level 
 ```{r}
 repeated_data <- group_data[rep(seq_len(nrow(group_data)), each = 4), ] 
 
-data$diversity_score <- repeated_data$diversity_score
+ind_data$diversity_score <- repeated_data$diversity_score
 ```
 
 ```{r}
-data$diversity <- cut(data$diversity_score, 
+ind_data$diversity <- cut(ind_data$diversity_score, 
                       breaks = c(-Inf, 2, 5, Inf),
                       labels = c("low", "middle", "high"))
 ```
 
 ```{r}
-data$diversity <- as.factor(data$diversity)
-data$type <- as.factor(data$type)
+ind_data$diversity <- as.factor(ind_data$diversity)
+ind_data$type <- as.factor(ind_data$type)
 ```
 
 ```{r}
-mean_values <- data %>%
+mean_values <- ind_data %>%
   group_by(type) %>% 
   summarise("mean_avg_adaptation" = mean(avg_adaptation), 
             "sd_mean_avg_adaptation" = sd(avg_adaptation))
@@ -64,41 +67,47 @@ mean_values %>%
 
 ### Accuracy 
 ```{r}
-ggplot(data = data, aes(x = type, y = avg_accuracy, fill = type)) + 
+ggplot(data = ind_data, aes(x = type, y = avg_accuracy, fill = type)) + 
   labs(title = "Accuracy")+
   geom_violin()
 ```
 
-
 ```{r}
-
-```
-
-```{r}
-ggplot(data = data, aes(x = avg_accuracy, y = avg_adaptation)) + 
+ggplot(data = ind_data, aes(x = avg_accuracy, y = avg_adaptation)) + 
   labs(title = "Accuracy and Adaptation")+
   geom_point(aes(color = type)) + 
   theme_bw()
 ```
 
-
 ```{r}
-ggplot(data = data, aes(x = type, y = avg_adaptation, fill = type)) + 
-  labs(title = "Adaptation")+
-  geom_violin()
+adaptation_fig <- ind_data %>%
+  mutate(type = fct_reorder(type, avg_adaptation, .desc = TRUE)) %>%
+  ggplot(aes(x=type, y=avg_adaptation, fill = type)) +
+    geom_violin() +
+    geom_boxplot(width = 0.4, outlier.size=-1) + 
+    scale_y_continuous(labels = scales::percent_format(accuracy=1))+
+    labs(y = "Adaptation", x = "Personality Type (PT)", title = "Personality Type and Adaptation")+
+    stat_summary(fun = mean, geom = "point", shape = 18, size=2, colour="white", alpha = 0.8)+ 
+    theme_bw() +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), plot.title = element_text(hjust = 0.5, size = 16), text=element_text(family = "Times New Roman"))+
+    guides(fill=FALSE)
 
+
+#ggsave(adaptation_fig, filename = "adaptation_ind_data.jpeg", dpi = 300, type = "cairo", width = 7, height = 3.5, units = "in")
+
+adaptation_fig
 ```
 
 ## STATS 
 ```{r}
 ## accuracy model ## 
-accuracy_model <- lm(avg_accuracy ~ type, data = data)
+accuracy_model <- lm(avg_accuracy ~ type, data = ind_data)
 summary(accuracy_model)
 ```
 
 ```{r}
 ## adaptation model ## 
-adaptation_model <- lm(avg_adaptation ~ type, data = data)
+adaptation_model <- lm(avg_adaptation ~ type, data = ind_data)
 summary(adaptation_model)
 ```
 
