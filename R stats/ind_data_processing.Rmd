@@ -86,7 +86,7 @@ adaptation_fig <- ind_data %>%
     geom_violin() +
     geom_boxplot(width = 0.4, outlier.size=-1) + 
     scale_y_continuous(labels = scales::percent_format(accuracy=1))+
-    labs(y = "Adaptation", x = "Personality Type (PT)", title = "Personality Type and Adaptation")+
+    labs(y = "Adaptation", x = "Personality Type (PT)", title = "(A) Personality Type and Adaptation")+
     stat_summary(fun = mean, geom = "point", shape = 18, size=2, colour="white", alpha = 0.8)+ 
     theme_bw() +
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), plot.title = element_text(hjust = 0.5, size = 16), text=element_text(family = "Times New Roman"))+
