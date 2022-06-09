@@ -6,16 +6,19 @@ By @MinaAlmasi & @drasbaek
 The repository contains the following: 
 
 **ABM_Main**
-This jupyter notebook has all the ABM functions along with a tested workflow and a model run. 
+This Jupyter notebook has all the ABM functions along with a tested workflow and a model run. 
 
-**pt_combinatoins**
+**pt_combinations**
 Jupyter notebook used to create pt_data.csv 
 
 **pt_data** 
 CSV file with all the 3876 combinations 
 
-**data**
-Contains data from the simulations 
+**data_100_sim**
+Contains data from the final simulations
 
 **R stats** 
-Contains two Rmarkdown notebooks with data processing and stats
+Contains two Rmarkdown notebooks with data processing and stats on the individual and group level 
+
+**figures** 
+Plots of data and illustration of the ABM workflow 
